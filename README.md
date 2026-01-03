@@ -120,14 +120,60 @@ Install Docker Desktop from https://www.docker.com/get-started
 Start Docker Desktop application
 
 **"No pyproject.toml found"**  
-Add a `pyproject.toml` file at your project root with at minimum:
-```toml
-[project]
-name = "my-kivy-app"
-version = "0.1.0"
+Create a new Kivy project with uv:
 
-[project.scripts]
-myapp = "mypackage.main:main"
+```bash
+# Initialize project
+uv init --package . --name myapp
+
+# Install dependencies
+uv add kivy kivy-reloader trio
+```
+
+Then update your app structure:
+
+change __init__.py content to
+
+**src/myapp/__init__.py:**
+```python
+from .app import main
+```
+
+create app.py
+
+**src/myapp/app.py:**
+```python
+import trio
+from kivy.lang import Builder
+from kivy_reloader.app import App
+
+kv = """
+Button:
+    text: "Hello World"
+"""
+
+class MainApp(App):
+    def build(self):
+        return Builder.load_string(kv)
+
+def main():
+    app = MainApp()
+    trio.run(app.async_run, "trio")
+```
+
+**Quick Setup:**
+```bash
+# Create project
+uv init --package . --name myapp
+
+# Install dependencies
+uv add kivy kivy-reloader trio
+
+# Create app.py (see structure above)
+# Update __init__.py to import main
+
+# Run with hot reload
+uv run myappapp.async_run, "trio"
 ```
 
 **Changes not reloading**  
