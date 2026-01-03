@@ -1,0 +1,158 @@
+{
+  "name": "kivy-reloader",
+  "displayName": "Kivy Hot Reloader",
+  "description": "Hot reload support for Kivy applications in Docker containers",
+  "version": "0.1.0",
+  "publisher": "pyswiftkit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kivy-school/kivy-reloader-vscode"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers"
+  ],
+  "keywords": [
+    "kivy",
+    "python",
+    "hot reload",
+    "docker"
+  ],
+  "activationEvents": [
+    "onLanguage:python",
+    "onLanguage:kv",
+    "workspaceContains:**/kivy-reloader.toml"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "kivyReloader.sendFile",
+        "title": "Kivy: Send to Hot Reload",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "kivyReloader.deployFullProject",
+        "title": "Kivy: Deploy Full Project",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "kivyReloader.toggleAutoSend",
+        "title": "Kivy: Toggle Auto Hot Reload",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "kivyReloader.showVncPreview",
+        "title": "Kivy: Show Live Preview (Select Instance)",
+        "icon": "$(device-camera-video)"
+      },
+      {
+        "command": "kivyReloader.showVncPreview1",
+        "title": "Kivy: Show Live Preview - Instance 1",
+        "icon": "$(device-camera-video)"
+      },
+      {
+        "command": "kivyReloader.showVncPreview2",
+        "title": "Kivy: Show Live Preview - Instance 2",
+        "icon": "$(device-camera-video)"
+      },
+      {
+        "command": "kivyReloader.setupDocker",
+        "title": "Kivy: Setup Docker Container",
+        "icon": "$(vm)"
+      },
+      {
+        "command": "kivyReloader.startContainer",
+        "title": "Kivy: Start Hot Reload Server",
+        "icon": "$(play)"
+      },
+      {
+        "command": "kivyReloader.stopContainer",
+        "title": "Kivy: Stop Hot Reload Server",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "kivyReloader.checkStatus",
+        "title": "Kivy: Check Docker Status",
+        "icon": "$(pulse)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceExtname == .py || resourceExtname == .kv",
+          "command": "kivyReloader.sendFile",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceExtname == .py || resourceExtname == .kv",
+          "command": "kivyReloader.deployFullProject",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceExtname == .py || resourceExtname == .kv",
+          "command": "kivyReloader.toggleAutoSend",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceExtname == .py || resourceExtname == .kv",
+          "command": "kivyReloader.showVncPreview",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "when": "resourceExtname == .toml && resourceFilename =~ /kivy-reloader\\.toml/",
+          "command": "kivyReloader.deployFullProject"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Kivy Hot Reloader",
+      "properties": {
+        "kivyReloader.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Hot reload server host"
+        },
+        "kivyReloader.port": {
+          "type": "number",
+          "default": 8050,
+          "description": "Hot reload server port"
+        },
+        "kivyReloader.autoSend": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically send hot reload updates when files change"
+        },
+        "kivyReloader.debounceMs": {
+          "type": "number",
+          "default": 2000,
+          "description": "Debounce delay in milliseconds for auto-send"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.x",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.50.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
+  }
+}
