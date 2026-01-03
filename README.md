@@ -134,7 +134,7 @@ Then update your app structure:
 
 change __init__.py content to
 
-**src/myapp/__init__.py:**
+**src/myapp/\_\_init\_\_.py:**
 ```python
 from .app import main
 ```
