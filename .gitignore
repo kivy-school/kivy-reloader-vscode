@@ -14,3 +14,9 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+
+# Project config files
+buildozer.spec
+kivy-reloader.toml
+pyproject.toml
+uv.lock
