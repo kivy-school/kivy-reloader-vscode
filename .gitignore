@@ -1,0 +1,16 @@
+node_modules/
+out/
+.venv/
+*.vsix
+*.log
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
