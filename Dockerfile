@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Install system dependencies for Kivy and VNC streaming
 RUN apt-get update && apt-get install -y \
@@ -28,33 +28,38 @@ RUN apt-get update && apt-get install -y \
     xclip \
     xsel \
     procps \
+    x11-xserver-utils \
+    fontconfig \
+    fonts-noto-core \
+    fonts-roboto \
+    fonts-open-sans \
+    fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv for fast Python package management
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-# Install Python packages (toml needed by kivy_reloader_server.py)
-RUN pip install --no-cache-dir \
-    kivy \
-    pillow \
-    kivy-reloader \
-    toml
+RUN pip install --no-cache-dir kivy pillow websockets
+
+# Install figma-kivy-previewer from workspace root build context
+COPY figma-kivy-previewer/figma-kivy-previewer /tmp/fkp
+RUN pip install --no-cache-dir /tmp/fkp && rm -rf /tmp/fkp
 
 # Set up working directory
 WORKDIR /work
 
-# Environment variables for display
+# Environment variables for display and previewer
 ENV DISPLAY=:99
 ENV SDL_VIDEODRIVER=x11
+ENV PREVIEWER_IP=0.0.0.0
+ENV PREVIEWER_PORT=7654
 
-# Copy startup script and kivy-reloader server
-COPY start-vnc.sh /usr/local/bin/start-vnc.sh
-COPY kivy_reloader_server.py /usr/local/bin/kivy_reloader_server.py
+# Copy startup script
+COPY kivy-reloader-vscode/start-vnc.sh /usr/local/bin/start-vnc.sh
 RUN chmod +x /usr/local/bin/start-vnc.sh
-RUN chmod +x /usr/local/bin/kivy_reloader_server.py
 
-# Expose VNC, WebSocket, and Kivy-reloader ports
-EXPOSE 5900 6080 8050
+# Expose VNC, WebSocket (noVNC), and previewer ports
+EXPOSE 5900 6080 7654
 
 CMD ["/usr/local/bin/start-vnc.sh"]
